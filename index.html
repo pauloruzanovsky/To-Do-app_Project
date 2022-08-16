@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="bundle.js" defer></script>
+    <title>done.</title>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="content">
+        <header class="header">
+            <button class="new-task">New Task</button>
+        </header>
+        <div class="main">
+            <div class="sidebar">
+                <h2 class="tasks title">Tasks</h2>
+                <ul class="tasks nav">
+                    <li class="nav task-button inbox">
+                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
+                            <g fill="currentColor">
+                                <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5H2zM3 3H2v1h1V3z"/><path d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9z"/><path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5V7zM2 7h1v1H2V7zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5H2zm1 .5H2v1h1v-1z"/>
+                            </g>
+                        </svg>
+                        <p>Inbox</p>
+                    </li>
+                    <li class="nav task-button today">
+                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 512 512"><path fill="currentColor" d="M416 64h-16V48.45c0-8.61-6.62-16-15.23-16.43A16 16 0 0 0 368 48v16H144V48.45c0-8.61-6.62-16-15.23-16.43A16 16 0 0 0 112 48v16H96a64 64 0 0 0-64 64v12a4 4 0 0 0 4 4h440a4 4 0 0 0 4-4v-12a64 64 0 0 0-64-64Zm61 112H35a3 3 0 0 0-3 3v237a64 64 0 0 0 64 64h320a64 64 0 0 0 64-64V179a3 3 0 0 0-3-3ZM224 307.43A28.57 28.57 0 0 1 195.43 336h-70.86A28.57 28.57 0 0 1 96 307.43v-70.86A28.57 28.57 0 0 1 124.57 208h70.86A28.57 28.57 0 0 1 224 236.57Z"/></svg>
+                        <p>Today</p>
+                    </li>
+                    <li class="nav task-button upcoming">
+                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><path fill="currentColor" d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zM9.5 7h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm3 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zM2 10.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"/>
+                        </svg>
+                        <p>Upcoming</p>
+                    </li>
+                </ul>
+                <div class="projects">
+                    <div class="projectsHeader">
+                        <h2 class="projectsTitle">Projects</h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="newProjectButton" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 20v-8m0 0V4m0 8h8m-8 0H4"/></svg>
+                    </div>
+                    <div class="projectsList"></div>
+                </div>
+
+
+            </div>
+                <div class="main-content">
+                    <h2 class="mainTitle">Today</h2>
+                    <div class="tasks">
+                    </div>
+                </div>
+                    <form action="" class="newTaskForm" name="taskForm">
+                        <input type="text" id="taskName" placeholder="Task name" required>   
+                        <textarea name="" id="taskDescription" placeholder="Description"></textarea>
+                        <div class="task-options">
+                            <input type="date" id="taskDate" required>
+                            <select name="Project" id="projectDropdown">
+                                <option value="Inbox">Inbox</option>
+                            </select>
+                        </div>
+                        <div class="action-buttons">
+                            <button type="button" class="cancelForm">Cancel</button>
+                            <button type="submit" class="submitTaskForm" disabled>Add Task</button>
+                        </div>
+                    </form>
+                    <form action=""class="newProjectForm" name="newProjectForm">
+                        <input type="text" id="newProjectName" placeholder="Project Name">
+                        <div class="action-buttons">
+                            <button type="button" class="cancelForm">Cancel</button>
+                            <button type="submit" class="submitProjectForm" disabled>Create project</button>
+                        </div>
+                    </form>
+                    <form action=""class="renameProjectForm" name="renameProjectForm">
+                        <input type="text" id="projectRename" placeholder="Project Name">
+                        <div class="action-buttons">
+                            <button type="button" class="cancelForm">Cancel</button>
+                            <button type="submit" class="submitProjectRename" disabled>Rename project</button>
+                        </div>
+                    </form>
+        </div>
+        <div id='project-menu'>
+            <div class="item" id='renameProject'>Rename</div>
+            <div class="item" id='deleteProject'>Delete</div>
+        </div>
+
+
+    </div>
+</body>
+</html>
