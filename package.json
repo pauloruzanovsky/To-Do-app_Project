@@ -1,0 +1,31 @@
+{
+  "name": "to-do-app_project",
+  "version": "1.0.0",
+  "description": "My attempt at the To-Do app from The Odin Project's curriculum.",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pauloruzanovsky/To-Do-app_Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pauloruzanovsky/To-Do-app_Project/issues"
+  },
+  "homepage": "https://github.com/pauloruzanovsky/To-Do-app_Project#readme",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "dependencies": {
+    "date-fns": "^2.29.1",
+    "lodash": "^4.17.21"
+  },
+  "main": "webpack.config.js"
+}
