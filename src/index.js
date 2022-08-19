@@ -13,8 +13,6 @@ import {showNewTaskForm,
         submitEditTask,
         } from './taskForm.js'
 
-  
-
 const todayTasksButton = document.querySelector('.nav.task-button.today');
 todayTasksButton.addEventListener('click', showTodayTasks);
 
