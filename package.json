@@ -4,7 +4,8 @@
   "description": "My attempt at the To-Do app from The Odin Project's curriculum.",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -16,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/pauloruzanovsky/To-Do-app_Project/issues"
   },
-  "homepage": "https://github.com/pauloruzanovsky/To-Do-app_Project#readme",
+  "homepage": "https://github.com/pauloruzanovsky/To-Do-app_Project",
   "devDependencies": {
     "css-loader": "^6.7.1",
     "style-loader": "^3.3.1",
