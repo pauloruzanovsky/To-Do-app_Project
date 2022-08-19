@@ -11,8 +11,11 @@
     <div class="overlay"></div>
     <div class="content">
         <header class="header">
+            <div class="showSidebarButton">
+                <svg   svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h24M4 16h24M4 24h24"/></svg>
+            </div>
             <button class="new-task">New Task</button>
-        </header>
+            </header>
         <div class="main">
             <div class="sidebar">
                 <h2 class="tasks title">Tasks</h2>
@@ -76,6 +79,20 @@
                         <div class="action-buttons">
                             <button type="button" class="cancelForm">Cancel</button>
                             <button type="submit" class="submitProjectRename" disabled>Rename project</button>
+                        </div>
+                    </form>
+                    <form action="" class="editTaskForm" name="editTaskForm">
+                        <input type="text" id="editTaskName" required>   
+                        <textarea name="" id="editTaskDescription"></textarea>
+                        <div class="task-options">
+                            <input type="date" id="editTaskDate" required>
+                            <select name="editProject" id="editProjectDropdown">
+                                <option value="Inbox">Inbox</option>
+                            </select>
+                        </div>
+                        <div class="action-buttons">
+                            <button type="button" class="cancelForm">Cancel</button>
+                            <button type="submit" class="submitEditTaskForm">Edit Task</button>
                         </div>
                     </form>
         </div>

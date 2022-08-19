@@ -13,7 +13,7 @@ const newProjectDOM = document.querySelector('.newProjectForm');
 const projectsListDOM = document.querySelector('.projectsList');
 const newProjectName = document.getElementById('newProjectName');
 const mainTitle = document.querySelector('.mainTitle');
-const select = document.querySelector('select');
+const allSelects = document.querySelectorAll('select');
 const projectMenu = document.getElementById('project-menu');
 const renameProjectButton =document.getElementById('renameProject');
 const deleteProjectButton = document.getElementById('deleteProject');
@@ -21,6 +21,13 @@ const renameProjectDOM = document.querySelector('.renameProjectForm');
 const projectRenameInput = document.querySelector('#projectRename');
 const submitRenameButton = document.querySelector('.submitProjectRename');
 const submitNewProjectButton = document.querySelector('.submitProjectForm');
+const editTaskButtons = document.querySelectorAll('.taskEditButton');
+const editTaskNameInput = document.getElementById('editTaskName');
+const editTaskDescriptionInput = document.getElementById('editTaskDescription');
+const editTaskDateInput = document.getElementById('editTaskDate');
+const editTaskProjectDropdown = document.getElementById('editProjectDropdown');
+const showSidebarButton = document.querySelector('.showSidebarButton');
+const sidebar = document.querySelector('.sidebar');
 const allTasks = [];
 const allProjects = [];
 
@@ -42,23 +49,18 @@ class Project {
     }
 }
 
-const task1 = new Task('Water plants', 'Water roses and daisies today', '2022-08-03','Chores');
+const task1 = new Task('Wash the dishes', 'Wash the lunch and dinner dishes', '2022-08-03','Chores');
 const task2 = new Task('Go to gym', 'Leg day', '2022-08-12','Gym');
 const project1 = new Project('Gym');
 const project2 = new Project('Chores');
 
-
-
 allTasks.push(task1, task2);
 allProjects.push(project1, project2);
-    allProjects.forEach(project => {
-        select.options.add(new Option(`${project.name}`,`${project.name}`))
-    
+allProjects.forEach(project => {
+    allSelects.forEach(select => {
+     select.options.add(new Option(`${project.name}`,`${project.name}`))
     })
-
-
-showAllTasks();
-
+})
 
 export function showNewTaskForm() {
     
@@ -84,6 +86,7 @@ export function formFilledCheck() {
         const canSubmitTaskForm = [...document.forms.taskForm.querySelectorAll('input')]
         const canSubmitProjectRename = [...document.forms.renameProjectForm.querySelectorAll('input')]
         const canSubmitNewProject = [...document.forms.newProjectForm.querySelectorAll('input')]
+        const canSubmitEditTaskForm = [...document.forms.editTaskForm.querySelectorAll('input')]
 
         .every(i => {
             return i.value
@@ -91,7 +94,7 @@ export function formFilledCheck() {
         document.forms.taskForm.querySelector('button.submitTaskForm').disabled = !canSubmitTaskForm
         document.forms.renameProjectForm.querySelector('button.submitProjectRename').disabled = !canSubmitProjectRename
         document.forms.newProjectForm.querySelector('button.submitProjectForm').disabled = !canSubmitNewProject
-
+        document.forms.editTaskForm.querySelector('button.submitEditTaskForm').disabled = !canSubmitEditTaskForm
     }
     }
 }
@@ -102,6 +105,7 @@ export function closeForm() {
     overlay.classList.remove('active');
     projectMenu.classList.remove('active');
     renameProjectDOM.classList.remove('active');
+    editTaskForm.classList.remove('active');
     newTaskForm.reset();
     newProjectDOM.reset();
     renameProjectDOM.reset();
@@ -120,7 +124,7 @@ export function submitForm(e) {
     const task = new Task(taskName.value, taskDescription.value, taskDate.value, taskProject.value);
     allTasks.push(task);
     closeForm();
-    showAllTasks();
+    updateCurrentTaskList();
 }
 
 export function deleteTaskList() {
@@ -130,58 +134,71 @@ export function deleteTaskList() {
     }
 }
 
+export function editTask(e) {
+    const taskIndex = e.target.parentElement.getAttribute('index');
+    editTaskNameInput.value = allTasks[taskIndex].name;
+    editTaskDescriptionInput.value = allTasks[taskIndex].description;
+    editTaskDateInput.value = format(allTasks[taskIndex].date,'yyyy-MM-dd');
+    editTaskProjectDropdown.value = allTasks[taskIndex].project;
+    editTaskForm.classList.add('active');
+    editTaskForm.setAttribute('index', taskIndex);
+    overlay.classList.add('active');
+}
+
+export function submitEditTask(e) {
+    e.preventDefault();
+    const taskIndex = editTaskForm.getAttribute('index');
+    console.log(editTaskDateInput.value);
+    allTasks[taskIndex] = {...allTasks[taskIndex], 
+                            name: editTaskNameInput.value, 
+                            description: editTaskDescriptionInput.value, 
+                            date: parseISO(editTaskDateInput.value), 
+                            project: editTaskProjectDropdown.value, 
+                            key: editTaskNameInput.value+editTaskDescriptionInput.value+editTaskDateInput.value+editTaskProjectDropdown.value}
+    closeForm();
+    updateCurrentTaskList();
+}
 
 export function deleteTask() {
     const completeTaskButtons = document.querySelectorAll('.taskCheckbox');
     completeTaskButtons.forEach(button => {
         button.addEventListener('click', () => {
             const buttonIndex = button.getAttribute('index');
-            if(mainTitle.textContent === "Inbox") {
-                allTasks.splice(buttonIndex,1);   
-                showAllTasks();
-
-            } else if(mainTitle.textContent === "Today") {
-                const todayTasks = allTasks.filter(task => task.date.getTime() <= todayDate.getTime());
-                const index = allTasks.findIndex(task => {
-                    return task.key === todayTasks[buttonIndex].key;
-                }) 
-                allTasks.splice(index,1); 
-                showTodayTasks();
-
-            } else if(mainTitle.textContent === "Upcoming") {
-                const upcomingTasks = allTasks.filter(task => task.date.getTime() > todayDate.getTime());
-                const index = allTasks.findIndex(task => {
-                    return task.key === upcomingTasks[buttonIndex].key;
-                }) 
-                allTasks.splice(index,1); 
-                showUpcomingTasks();
-            } else {
-                const projectTasks = allTasks.filter(task => task.project === mainTitle.textContent);
-                const index = allTasks.findIndex(task => {
-                task.key === projectTasks[buttonIndex].key;
-                }) 
-                allTasks.splice(index,1); 
-                updateProjectTasks();
-            }
+            allTasks.splice(buttonIndex,1);
+            updateCurrentTaskList();
             })
     })   
-    }
+}
 
 
 export function showAllTasks() {
     deleteTaskList();
     inputTaskIntoDOM(allTasks);
     mainTitle.textContent = "Inbox";
-    deleteTask();
+    enableDragElements();
+    sidebar.classList.remove('active');
 
+    deleteTask();
+    const editTaskButtons = document.querySelectorAll('.taskEditButton');
+    editTaskButtons.forEach(button => {
+        button.addEventListener('click', editTask);
+      })
 }
 
 export function showTodayTasks() {
     const todayTasks = allTasks.filter(task => task.date.getTime() <= todayDate.getTime());
     deleteTaskList();
     inputTaskIntoDOM(todayTasks);
+    enableDragElements();
+    sidebar.classList.remove('active');
+
+
     mainTitle.textContent = "Today";
     deleteTask();
+    const editTaskButtons = document.querySelectorAll('.taskEditButton');
+    editTaskButtons.forEach(button => {
+        button.addEventListener('click', editTask);
+      })
 
 }
 
@@ -189,7 +206,15 @@ export function showProjectTasks() {
         const projectTasks = allTasks.filter(task => task.project === mainTitle.textContent);
         deleteTaskList();
         inputTaskIntoDOM(projectTasks);
+        enableDragElements();
+        sidebar.classList.remove('active');
+
+
         deleteTask();
+        const editTaskButtons = document.querySelectorAll('.taskEditButton');
+        editTaskButtons.forEach(button => {
+            button.addEventListener('click', editTask);
+          })
 
 }
 
@@ -197,8 +222,16 @@ export function showUpcomingTasks() {
     const upcomingTasks = allTasks.filter(task => task.date.getTime() > todayDate.getTime());
     deleteTaskList();
     inputTaskIntoDOM(upcomingTasks);
+    enableDragElements();
+    sidebar.classList.remove('active');
+
+
     mainTitle.textContent = "Upcoming";
     deleteTask();
+    const editTaskButtons = document.querySelectorAll('.taskEditButton');
+    editTaskButtons.forEach(button => {
+        button.addEventListener('click', editTask);
+      })
 
 
     
@@ -208,25 +241,31 @@ export function createNewTaskDOM(counter) {
     const taskDOM = document.createElement('div');
     taskDOM.className = `task`;
     taskDOM.setAttribute('index',counter);
-    taskDOM.innerHTML = `   <div class="container">
-                                <div class="round">
-                                <input type="checkbox" class="taskCheckbox" id="checkbox-${counter}" index="${counter}" />
-                                <label for="checkbox-${counter}"></label>
+    taskDOM.draggable = true;
+    taskDOM.innerHTML = `       <div class="taskMoveIcon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 256"><path fill="currentColor" d="M108 60a16 16 0 1 1-16-16a16 16 0 0 1 16 16Zm56 16a16 16 0 1 0-16-16a16 16 0 0 0 16 16Zm-72 36a16 16 0 1 0 16 16a16 16 0 0 0-16-16Zm72 0a16 16 0 1 0 16 16a16 16 0 0 0-16-16Zm-72 68a16 16 0 1 0 16 16a16 16 0 0 0-16-16Zm72 0a16 16 0 1 0 16 16a16 16 0 0 0-16-16Z"/></svg>
                                 </div>
-                            </div>
-                            <div class="taskInfo">
-                                <div class="taskName-${counter}"></div>
-                                <div class="taskDescription-${counter}" ></div>
-                                <div class="taskDate-${counter}"></div>
-                                <div class="taskProject-${counter}"></div>
-                            </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="taskEditButton" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m16.474 5.408l2.118 2.117m-.756-3.982L12.109 9.27a2.118 2.118 0 0 0-.58 1.082L11 13l2.648-.53c.41-.082.786-.283 1.082-.579l5.727-5.727a1.853 1.853 0 1 0-2.621-2.621Z"/><path d="M19 15v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3"/></g></svg>`
-    taskListDOM.append(taskDOM);
+                                <div class="container">
+                                    <div class="round">
+                                    <input type="checkbox" class="taskCheckbox" id="checkbox-${counter}" index="${counter}" />
+                                    <label for="checkbox-${counter}"></label>
+                                    </div>
+                                </div>
+                                <div class="taskInfo">
+                                    <div class="taskName-${counter}"></div>
+                                    <div class="taskDescription-${counter}" ></div>
+                                    <div class="taskDate-${counter}"></div>
+                                    <div class="taskProject-${counter}"></div>
+                                </div>
+                                <div class="taskEditButton">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" ><path d="m16.474 5.408l2.118 2.117m-.756-3.982L12.109 9.27a2.118 2.118 0 0 0-.58 1.082L11 13l2.648-.53c.41-.082.786-.283 1.082-.579l5.727-5.727a1.853 1.853 0 1 0-2.621-2.621Z"/><path d="M19 15v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3"/></g></svg>
+                                </div>`
+                                taskListDOM.append(taskDOM);
 }
 
 export function inputTaskIntoDOM(array){
     array.forEach(task => {
-        const taskPosition = array.indexOf(task);
+        const taskPosition = allTasks.indexOf(task);
         createNewTaskDOM(taskPosition);
         const taskNameDOM = document.querySelector(`.taskName-${taskPosition}`);
         const taskDescriptionDOM = document.querySelector(`.taskDescription-${taskPosition}`);
@@ -244,18 +283,19 @@ export function inputTaskIntoDOM(array){
 }
 
 export function updateCurrentTaskList() {
-    if(mainTitle.textContent ==='Today') 
-    return showTodayTasks();
+    if(mainTitle.textContent ==='Today')
+        showTodayTasks()
     
-    if(mainTitle.textContent ==='Inbox') 
-    return showAllTasks();
+    else if(mainTitle.textContent ==='Inbox') 
+        showAllTasks()
 
-    if(mainTitle.textContent ==='Upcoming')
-    return showUpcomingTasks();
+    else if(mainTitle.textContent ==='Upcoming')
+        showUpcomingTasks()
     
-    return showProjectTasks();
+    else showProjectTasks() 
 }
-    
+
+
 // Projects related functions
 export function showNewProjectForm() {
     newProjectDOM.classList.add('active');
@@ -267,10 +307,11 @@ export function submitProjectForm(e) {
     e.preventDefault();
     const project = new Project(newProjectName.value);
     allProjects.push(project);
-    console.log(allProjects);
     inputProjectsIntoDOM(allProjects);
     closeForm();
-    select.options.add(new Option(project.name,project.name));
+    allSelects.forEach(select => {
+     select.options.add(new Option(project.name,project.name));
+    })
     }
 
 export function refreshProjectsDOM(counter) {
@@ -303,10 +344,6 @@ export function inputProjectsIntoDOM(array) {
 
 }
 
-inputProjectsIntoDOM(allProjects);
-
-
-
 
 export  function deleteProjectsList() {
     while(projectsListDOM.firstChild) {
@@ -332,6 +369,7 @@ export function showProjectTasksOnClick() {
         })
     })
 }
+
 export function deleteProject(projectName) {
     allTasks.forEach(task => {
         if(task.project === projectName) {
@@ -350,13 +388,10 @@ export function deleteProject(projectName) {
 }
 }
 
-updateCurrentTaskList();
-
 export function refreshProjectOptions() {
     const projectOptionButtons = document.querySelectorAll('.projectOptions');
     projectOptionButtons.forEach(button => {
             button.addEventListener('click', (event) => {
-                console.log(button.parentElement.firstChild.textContent);
                 event.preventDefault();
                 const { clientX: mouseX, clientY: mouseY } = event;
                 projectMenu.style.top = `${mouseY}px`;
@@ -366,11 +401,10 @@ export function refreshProjectOptions() {
                 projectMenu.classList.add('active');
             });
         });
-    }
+}
 
 deleteProjectButton.addEventListener("click", () => {
         const projectName = projectMenu.getAttribute('project');
-        console.log(allProjects.indexOf())
             if(mainTitle.textContent === projectName) {
                 showAllTasks();
             }
@@ -406,9 +440,6 @@ export function submitProjectRename(e) {
     })
 
     for(let i = 0; i < taskProject.options.length; i++) {
-        console.log(taskProject.options[i].value);
-        console.log(projectName);
-        console.log(projectRenameInput.value);
         if(taskProject.options[i].value === projectName) {
             taskProject.options[i].value = projectRenameInput.value;
             taskProject.options[i].textContent = projectRenameInput.value;
@@ -421,3 +452,71 @@ export function submitProjectRename(e) {
     updateCurrentTaskList();
     closeForm();
 }
+
+// Dragging Task functions
+export function enableDragElements() {
+    let draggedElement;
+
+ function handleDragStart(e) {
+    this.style.opacity = '0.4';
+    draggedElement = this;
+
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.innerHTML);
+
+}
+
+ function handleDragEnd(e) {
+    this.style.opacity = '1';
+}
+
+ function handleDragOver(e) {
+    e.preventDefault();
+    return false;
+  }
+
+  function handleDragEnter(e) {
+    this.classList.add('over');
+  }
+
+  function handleDragLeave(e) {
+    this.classList.remove('over');
+  }
+
+function handleDrop(e) {
+    e.stopPropagation(); // stops the browser from redirecting.
+    if(draggedElement !== this) {
+        draggedElement.innerHTML = this.innerHTML;
+        this.innerHTML = e.dataTransfer.getData('text/html');
+    }
+    taskContainers.forEach(task => 
+        task.classList.remove('over'))
+        console.log(this);
+    [allTasks[draggedElement.getAttribute('index')], allTasks[this.getAttribute('index')]] = [allTasks[this.getAttribute('index')], allTasks[draggedElement.getAttribute('index')]]
+    updateCurrentTaskList();
+    return false;
+}
+
+const taskContainers = document.querySelectorAll('.tasks .task');
+taskContainers.forEach(task => {
+    task.addEventListener('dragstart', handleDragStart);
+    task.addEventListener('dragover', handleDragOver);
+    task.addEventListener('dragenter', handleDragEnter);
+    task.addEventListener('dragleave', handleDragLeave);
+    task.addEventListener('dragend', handleDragEnd);
+    task.addEventListener('drop', handleDrop);
+
+
+})
+}
+
+// Calling starter functions
+showAllTasks();
+
+inputProjectsIntoDOM(allProjects);
+updateCurrentTaskList();
+
+showSidebarButton.addEventListener('click', () => {
+
+    sidebar.classList.toggle('active');
+  })

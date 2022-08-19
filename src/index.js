@@ -2,13 +2,15 @@ import './style.css'
 import {showNewTaskForm, 
         closeForm, 
         submitForm,
+        editTask,
         showTodayTasks,
         showAllTasks,
         showUpcomingTasks,
         formFilledCheck,
         showNewProjectForm,
         submitProjectForm,
-        submitProjectRename
+        submitProjectRename,
+        submitEditTask,
         } from './taskForm.js'
 
   
@@ -25,8 +27,15 @@ upcomingTasksButton.addEventListener('click', showUpcomingTasks);
 const newTaskButton = document.querySelector('button.new-task')
 newTaskButton.addEventListener('click',showNewTaskForm)
 
-const cancelFormButton = document.querySelectorAll('.cancelForm')
+const editTaskButtons = document.querySelectorAll('.taskEditButton');
+editTaskButtons.forEach(button => {
+  button.addEventListener('click', editTask);
+})
 
+const submitEditTaskButton = document.querySelector('.submitEditTaskForm');
+submitEditTaskButton.addEventListener('click', submitEditTask);
+
+const cancelFormButton = document.querySelectorAll('.cancelForm')
 cancelFormButton.forEach(button => {
   button.addEventListener('click', closeForm)  
 })
@@ -52,6 +61,9 @@ submitProjectFormButton.addEventListener('click', submitProjectForm);
 
 const submitProjectRenameButton = document.querySelector('.submitProjectRename');
 submitProjectRenameButton.addEventListener('click', submitProjectRename);
+
+
+
 
 
 formFilledCheck();

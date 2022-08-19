@@ -68,7 +68,7 @@ ul, li {
 body {
   display: grid;
   place-items: center;
-  background-color: #607EAA;
+  background-color: #00ADB5;
 }
 
 .overlay {
@@ -95,8 +95,8 @@ body {
 /* HEADER */
 header {
   width: 100%;
-  background: #1C3879;
-  color: rgb(255, 255, 255);
+  background: #222831;
+  color: white;
   font-weight: bold;
   padding: 10px;
   display:flex;
@@ -105,14 +105,26 @@ header {
 
 }
 
+.showSidebarButton{
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.showSidebarButton > svg {
+  pointer-events: none;
+  fill: white;
+
+}
+
 button.new-task {
-  background-color:  #607EAA;
+  margin-left: auto;
+  background-color:  #00ADB5;
   padding: 5px;
   border-radius: 4px;
 }
 
 button.new-task:hover {
-  background-color:  #40608f;
+  background-color:  #018e96;
 }
 
 /* SIDEBAR + MAIN */
@@ -127,6 +139,31 @@ button.new-task:hover {
   background-color: #EAE3D2;
   height: 100%;
   padding: 30px 5px 30px 30px;
+
+}
+
+@media only screen and (max-width: 700px) {
+  .sidebar {
+    position: absolute;
+    z-index: 2;
+    display: none;
+    height: 100%;
+    width: 300px;
+  }
+
+  .showSidebarButton {
+    visibility:visible;
+
+  }
+  .main {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar.active {
+    display: block;
+  }
+
+
 }
 
 .tasks.nav {
@@ -152,9 +189,6 @@ svg {
   background-color:#daceb3;
   border-radius: 4px;
   cursor:pointer;
-
-
-  
 }
 
 .nav.task-button:hover, div[id*='project-']:hover {
@@ -206,6 +240,11 @@ div[class*='taskDescription'] {
   padding-bottom: 10px;
 }
 
+.task.over {
+  border: 3px dotted #EAE3D2;
+
+}
+
 .task:hover {
   cursor:default;
 }
@@ -214,20 +253,33 @@ div[class*='taskDescription'] {
   border-top: 1px solid #EAE3D2;
 }
 
-.task .taskEditButton {
+.taskEditButton{
 margin-left: auto;
 flex-shrink: 0;
 visibility: hidden;
 }
 
-.task:hover .taskEditButton {
+
+.taskMoveIcon {
+  visibility: hidden;
+  cursor: move;
+  margin-bottom: auto;
+
+}
+
+.task:hover .taskEditButton, .task:hover .taskMoveIcon{
   visibility: visible;
 }
+
+
 
 .taskEditButton:hover {
   cursor: pointer;
 }
 
+.taskEditButton > * {
+  pointer-events: none;
+}
 .round {
   position: relative;
 }
@@ -246,13 +298,7 @@ visibility: hidden;
 
 
 .round label:hover {
-  background-color: #66bb6a;
-  /* border: 1px solid #fff;
-  border-top: none;
-  border-right: none; */
-  /* content: ""; */
-  /* position: absolute; */
-  /* transform: rotate(-45deg); */
+  background-color: #00ADB5;
   width: 100%;
 }
 .round label:after {
@@ -274,8 +320,8 @@ visibility: hidden;
 }
 
 .round input[type="checkbox"]:checked + label {
-  background-color: #66bb6a;
-  border-color: #66bb6a;
+  background-color: #00ADB5;
+  border-color: #00ADB5;
 }
 
 .round input[type="checkbox"]:checked + label:after {
@@ -286,7 +332,7 @@ visibility: hidden;
 
 /* NEW TASK FORM */
 
-form.newTaskForm {
+form.newTaskForm, form.editTaskForm {
   display: grid;
   gap: 5px;
   grid-template-rows: 1fr 3fr 1fr 1fr;
@@ -306,11 +352,7 @@ form.newTaskForm {
   z-index: -1;
 }
 
-.newTaskForm.active {
-  z-index: 2;
-}
-
-.newProjectForm.active, .renameProjectForm.active {
+.newTaskForm.active, .newProjectForm.active, .renameProjectForm.active, .editTaskForm.active{
   z-index: 2;
 }
 form > *, form > * > *{ 
@@ -318,11 +360,11 @@ form > *, form > * > *{
 
 }
 
-#taskName, #taskDescription {
+#taskName, #taskDescription, #editTaskName, #editTaskDescription {
   width: 100%;
 }
 
-#taskDescription {
+#taskDescription, #editTaskDescription{
   border: 1px solid #EAE3D2;
   padding: 5px;
   border-radius: 8px;
@@ -338,12 +380,12 @@ textarea::placeholder {
   gap: 10px;
 }
 
-#projectDropdown {
+#projectDropdown, #editProjectDropdown {
   border-radius: 8px;
   border: 1px solid #EAE3D2;
 }
 
-#taskDate {
+#taskDate, #editTaskDate {
   border: 1px solid #EAE3D2;
   border-radius: 8px;
 
@@ -368,16 +410,16 @@ textarea::placeholder {
 .cancelForm:hover{
   background-color:#daceb3;
 }
-.submitTaskForm, .submitProjectForm, .submitProjectRename {
-  background: #1C3879;
+.submitTaskForm, .submitProjectForm, .submitProjectRename, .submitEditTaskForm {
+  background: #00ADB5;
   color: rgb(255, 255, 255);
 }
 
-.submitTaskForm:enabled:hover, .submitProjectForm:enabled:hover, .submitProjectRename {
-  background: rgb(14, 36, 87);
+.submitTaskForm:enabled:hover, .submitProjectForm:enabled:hover, .submitProjectRename:enabled:hover, .submitEditTaskForm:enabled:hover {
+  background: #00949c;
 }
 
-.submitTaskForm:disabled, .submitProjectForm:disabled, .submitProjectRename:disabled {
+.submitTaskForm:disabled, .submitProjectForm:disabled, .submitProjectRename:disabled, .submitEditTaskForm:disabled {
   opacity: 0.5;
   cursor:not-allowed;
 }
