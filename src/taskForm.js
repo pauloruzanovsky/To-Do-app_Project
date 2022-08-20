@@ -6,7 +6,8 @@ const taskDate = document.getElementById('taskDate');
 const taskProject = document.getElementById('projectDropdown');
 const taskListDOM = document.querySelector('div.tasks');
 const newTaskForm = document.querySelector('form')
-const overlay = document.querySelector('.overlay')
+const overlay = document.querySelector('.overlay');
+const mainContent = document.querySelector('.main-content');
 const todayDate = parseISO(format(new Date(),"yyyy-MM-dd"));
 const submitFormButton = document.querySelector('.submitTaskForm');
 const newProjectDOM = document.querySelector('.newProjectForm');
@@ -21,7 +22,6 @@ const renameProjectDOM = document.querySelector('.renameProjectForm');
 const projectRenameInput = document.querySelector('#projectRename');
 const submitRenameButton = document.querySelector('.submitProjectRename');
 const submitNewProjectButton = document.querySelector('.submitProjectForm');
-const editTaskButtons = document.querySelectorAll('.taskEditButton');
 const editTaskNameInput = document.getElementById('editTaskName');
 const editTaskDescriptionInput = document.getElementById('editTaskDescription');
 const editTaskDateInput = document.getElementById('editTaskDate');
@@ -517,6 +517,11 @@ inputProjectsIntoDOM(allProjects);
 updateCurrentTaskList();
 
 showSidebarButton.addEventListener('click', () => {
-
     sidebar.classList.toggle('active');
+    console.log( sidebar.classList.contains('active'))
   })
+
+mainContent.addEventListener('click', () => {
+    if(sidebar.classList.contains('active'))
+        sidebar.classList.toggle('active');
+})

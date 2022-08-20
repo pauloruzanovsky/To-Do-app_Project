@@ -101,14 +101,20 @@ header {
   font-weight: bold;
   padding: 10px;
   display:flex;
+  gap: 10px;
   justify-content: space-between;
   align-items: center;
 
 }
 
+header > div {
+  cursor: default;
+}
+
 .showSidebarButton{
   cursor: pointer;
   visibility: hidden;
+  height: 20px;
 }
 
 .showSidebarButton > svg {
@@ -154,6 +160,9 @@ button.new-task:hover {
     display: none;
     height: 100%;
     width: 300px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+
   }
 
   .showSidebarButton {
