@@ -16,8 +16,6 @@ body {
   color: var(--black);
   font-family: 'Poppins', sans-serif;
   word-wrap: break-word;
-  /* footer support */
-  margin-bottom: 100px;
 
 }
 button,
@@ -66,6 +64,9 @@ ul, li {
 
 
 body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
   display: grid;
   place-items: center;
   background-color: #00ADB5;
@@ -144,8 +145,7 @@ button.new-task:hover {
 
 @media only screen and (max-width: 700px) {
   .content {
-    width: 100vw;
-    height: 100vh;
+    width: 95%;
   }
 
   .sidebar {
@@ -348,7 +348,7 @@ form.newTaskForm, form.editTaskForm {
   width: 50vw;
   min-width: 300px;
   max-width: 600px;
-  height: 20vh;
+  height: 200px;
   border-radius: 8px;
   padding: 10px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -441,7 +441,7 @@ form.newProjectForm, form.renameProjectForm {
   width: 50vw;
   min-width: 100px;
   max-width: 300px;
-  height: 10vh;
+  height: 100px;
   border-radius: 8px;
   padding: 10px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
