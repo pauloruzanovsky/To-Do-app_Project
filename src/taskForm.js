@@ -28,9 +28,10 @@ const editTaskDateInput = document.getElementById('editTaskDate');
 const editTaskProjectDropdown = document.getElementById('editProjectDropdown');
 const showSidebarButton = document.querySelector('.showSidebarButton');
 const sidebar = document.querySelector('.sidebar');
-const allTasks = [];
-const allProjects = [];
-
+let allTasks = [];
+let allProjects = [];
+let storageTasks;
+let storageProjects;
 
 class Task {
     constructor(name,description,date,project) {
@@ -56,12 +57,39 @@ const project2 = new Project('Chores');
 
 allTasks.push(task1, task2);
 allProjects.push(project1, project2);
+getLocalStorageProjects();
+getLocalStorageTasks();
 allProjects.forEach(project => {
     allSelects.forEach(select => {
      select.options.add(new Option(`${project.name}`,`${project.name}`))
     })
 })
 
+// Local Storage functions
+export function getLocalStorageTasks() {
+    if (!localStorage.allTasks) {
+        localStorage.setItem('allTasks', JSON.stringify(allTasks));
+    }
+    storageTasks = JSON.parse(localStorage.allTasks);
+    storageTasks.forEach(task => {
+        task.date = parseISO(task.date)
+        console.log(task.date)
+    })
+
+    allTasks = storageTasks;
+
+}
+
+export function getLocalStorageProjects() {
+    if (!localStorage.allProjects) {
+        localStorage.setItem('allProjects', JSON.stringify(allProjects));
+    }
+    storageProjects = JSON.parse(localStorage.allProjects);
+    allProjects = storageProjects;
+}
+
+
+// Task Functions
 export function showNewTaskForm() {
     
     newTaskForm.classList.add('active');
@@ -125,6 +153,7 @@ export function submitForm(e) {
     allTasks.push(task);
     closeForm();
     updateCurrentTaskList();
+    localStorage.setItem('allTasks', JSON.stringify(allTasks));
 }
 
 export function deleteTaskList() {
@@ -143,6 +172,7 @@ export function editTask(e) {
     editTaskForm.classList.add('active');
     editTaskForm.setAttribute('index', taskIndex);
     overlay.classList.add('active');
+
 }
 
 export function submitEditTask(e) {
@@ -155,8 +185,11 @@ export function submitEditTask(e) {
                             date: parseISO(editTaskDateInput.value), 
                             project: editTaskProjectDropdown.value, 
                             key: editTaskNameInput.value+editTaskDescriptionInput.value+editTaskDateInput.value+editTaskProjectDropdown.value}
+    
+    localStorage.setItem('allTasks', JSON.stringify(allTasks));
     closeForm();
     updateCurrentTaskList();
+    console.log(allTasks);
 }
 
 export function deleteTask() {
@@ -165,6 +198,7 @@ export function deleteTask() {
         button.addEventListener('click', () => {
             const buttonIndex = button.getAttribute('index');
             allTasks.splice(buttonIndex,1);
+            localStorage.setItem('allTasks', JSON.stringify(allTasks));
             updateCurrentTaskList();
             })
     })   
@@ -307,6 +341,8 @@ export function submitProjectForm(e) {
     e.preventDefault();
     const project = new Project(newProjectName.value);
     allProjects.push(project);
+    localStorage.setItem('allProjects', JSON.stringify(allProjects));
+
     inputProjectsIntoDOM(allProjects);
     closeForm();
     allSelects.forEach(select => {
@@ -371,21 +407,29 @@ export function showProjectTasksOnClick() {
 }
 
 export function deleteProject(projectName) {
-    allTasks.forEach(task => {
-        if(task.project === projectName) {
-            allTasks.splice(allTasks.indexOf(task),1);
-        }})
+
+    for(let i = 0; i < allTasks.length; i++) {
+        if(allTasks[i].project === projectName) {
+            allTasks.splice(allTasks[i],1);
+            i--;
+        }
+    }
+
     allProjects.forEach(project => {
         if(project.name === projectName) {
             allProjects.splice(allProjects.indexOf(project),1);
+            
     }})
-    
+
     for(let i = 0; i < taskProject.options.length; i++) {
         const optionValue = taskProject.options[i].value;
         if(optionValue === projectName) {
             taskProject.remove(i);
+        }
     }
-}
+    localStorage.setItem('allProjects', JSON.stringify(allProjects));
+    localStorage.setItem('allTasks', JSON.stringify(allTasks));
+
 }
 
 export function refreshProjectOptions() {
@@ -405,13 +449,15 @@ export function refreshProjectOptions() {
 
 deleteProjectButton.addEventListener("click", () => {
         const projectName = projectMenu.getAttribute('project');
-            if(mainTitle.textContent === projectName) {
-                showAllTasks();
-            }
-                deleteProject(projectName);
-                inputProjectsIntoDOM(allProjects);
-                closeForm();
-                updateCurrentTaskList();
+
+
+        if(mainTitle.textContent === projectName) {
+            showAllTasks();
+        }
+        deleteProject(projectName);
+        inputProjectsIntoDOM(allProjects);
+        closeForm();
+        updateCurrentTaskList();
 
     }
     )
@@ -431,6 +477,7 @@ export function submitProjectRename(e) {
             project.name = projectRenameInput.value;
         }
     })
+    console.log(allProjects);
     inputProjectsIntoDOM(allProjects);
 
     allTasks.forEach(task => {
@@ -449,6 +496,8 @@ export function submitProjectRename(e) {
     if(mainTitle.textContent === projectName) {
         mainTitle.textContent = projectRenameInput.value;
     }
+    localStorage.setItem('allProjects', JSON.stringify(allProjects));
+    localStorage.setItem('allTasks', JSON.stringify(allTasks));
     updateCurrentTaskList();
     closeForm();
 }
@@ -494,6 +543,8 @@ function handleDrop(e) {
         console.log(this);
     [allTasks[draggedElement.getAttribute('index')], allTasks[this.getAttribute('index')]] = [allTasks[this.getAttribute('index')], allTasks[draggedElement.getAttribute('index')]]
     updateCurrentTaskList();
+    localStorage.setItem('allTasks', JSON.stringify(allTasks));
+
     return false;
 }
 
